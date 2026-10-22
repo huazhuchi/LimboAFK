@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.basiker</groupId>
+    <artifactId>limboafk</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>LimboAFK</name>
+    <description>基于 LimboAPI 的 Velocity AFK 分流系统</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <velocity.version>3.3.0-SNAPSHOT</velocity.version>
+        <limboapi.version>1.1.18</limboapi.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>elytrium</id>
+            <url>https://maven.elytrium.net/repo/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Velocity API：运行期由代理提供 -->
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>${velocity.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- LimboAPI：运行期由代理插件提供 -->
+        <dependency>
+            <groupId>net.elytrium.limboapi</groupId>
+            <artifactId>api</artifactId>
+            <version>${limboapi.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <!-- 只使用 LimboAPI 的 API 面，避免引入其内部工具库与 SNAPSHOT 依赖 -->
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- LimboAPI 方法签名使用 adventure-nbt；版本与 Velocity 3.3.0 自带的一致 -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-nbt</artifactId>
+            <version>4.17.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Velocity 自带 Configurate -->
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>configurate-yaml</artifactId>
+            <version>4.1.2</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>LimboAFK-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                    <encoding>UTF-8</encoding>
+                    <annotationProcessorPaths>
+                        <!-- 生成 velocity-plugin.json -->
+                        <path>
+                            <groupId>com.velocitypowered</groupId>
+                            <artifactId>velocity-api</artifactId>
+                            <version>${velocity.version}</version>
+                        </path>
+                        <!-- 注解处理器内部使用 Gson 写描述文件 -->
+                        <path>
+                            <groupId>com.google.code.gson</groupId>
+                            <artifactId>gson</artifactId>
+                            <version>2.10.1</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

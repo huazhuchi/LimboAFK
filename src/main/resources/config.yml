@@ -1,0 +1,71 @@
+# ============================================================
+#  LimboAFK - 基于 LimboAPI 的 AFK
+#  颜色码：支持 & 与 §，例如 &c 或 §c
+#  占位符：%seconds%  %player%  %server%
+# ============================================================
+
+# 插件总开关
+enabled: true
+
+# 是否开启自动 AFK 检测（关闭后仅 /afk 手动触发倒计时）
+auto-afk: true
+
+# 无“代理层可观测动作”多少秒后送入 Limbo
+# 注意：Velocity 只能观测聊天、指令、切换服务器；后端服务器内的移动、转头、
+# 交互不会产生代理事件，因此自动检测按“无聊天/无指令/未切服”计时。
+# 若必须精确检测大厅内移动，需要后端插件或数据包拦截，本插件按需求不包含后端代码。
+afk-timeout: 300
+
+# 提前多少秒发送警告（0 = 不警告，直接送入 Limbo）
+warning-before: 30
+
+# 扫描周期（秒）
+check-interval: 5
+
+commands:
+  # 是否启用 /afk
+  afk-enabled: true
+  # 是否启用 /limbo reload
+  limbo-enabled: true
+
+permissions:
+  afk: limboafk.afk
+  reload: limboafk.reload
+  # 拥有此权限的玩家不会被自动送入 Limbo（手动 /afk 仍然有效）
+  bypass: limboafk.bypass
+
+messages:
+  prefix: ""
+  afk-marked: "&e已标记为 AFK，&c%seconds% &e秒后进入 Limbo。"
+  afk-cancelled: "&a已取消 AFK 状态。"
+  afk-warning: "&e检测到你长时间未操作，&c%seconds% &e秒后将进入 Limbo。"
+  limbo-title: "&c&lAFK"
+  limbo-subtitle: "&7你已被传送到 Limbo"
+  limbo-action-bar: "&e移动、转头或输入指令即可返回"
+  limbo-chat: "&7你因长时间未操作被传送到 Limbo。\n&e移动、转头、聊天或输入指令即可返回原服务器。"
+  limbo-returned: "&a已返回服务器 &f%server%&a。"
+  no-server: "&c原服务器不可用，且没有可用的后备服务器。"
+  limbo-failed: "&c进入 Limbo 失败，请稍后再试。"
+  reloaded: "&a配置已重载。"
+  reload-failed: "&c重载失败，请查看控制台。"
+  no-permission: "&c你没有权限执行此操作。"
+  command-disabled: "&c该指令已在配置中禁用。"
+  players-only: "&c该指令只能由玩家执行。"
+  usage: "&e用法：/limbo reload"
+
+limbo:
+  # 虚拟维度：THE_END、NETHER、OVERWORLD
+  dimension: THE_END
+  spawn-x: 0.0
+  spawn-y: 100.0
+  spawn-z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+  # 进入 Limbo 时清空背包（槽位 0-45）
+  empty-inventory: true
+  # 关闭伤害：冒险模式，无法攻击/破坏方块，虚空内无伤害来源
+  disable-damage: true
+  # 关闭饥饿：旁观模式，客户端不显示生命/饥饿条（优先级高于 disable-damage）
+  disable-hunger: true
+  # 冻结坠落：让玩家悬浮在虚空，避免持续下落（建议保持 true）
+  freeze-falling: false
